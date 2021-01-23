@@ -1,0 +1,8 @@
+{
+    "symbol_url": "http://at.alicdn.com/t/font_2159796_r5dbum7sd6e.js",
+    "use_typescript": true,
+    "save_dir": "./ts/assets/iconfont",
+    "trim_icon_prefix": "",
+    "default_icon_size": 18,
+    "local_svgs": "./localSvgs"
+}

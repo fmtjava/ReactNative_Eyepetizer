@@ -1,0 +1,10 @@
+//
+//  Config.xcconfig
+//  reactnative_eyepetizer
+//
+//  Created by tao fang on 2021/1/16.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include? "tmp.xcconfig"

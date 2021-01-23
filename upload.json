@@ -1,0 +1,24 @@
+{
+  "pgy": {
+    "pgy_api_key": "f5d3c04a2f4fc48b8b2c65eb5c331526",
+    "pgy_install_type": 1,
+    "pgy_install_password": "",
+    "ios_export_plist": "./ios-export/ad-hoc.plist"
+  },
+  "fir": {
+    "fir_api_token": "",
+    "ios_export_plist": "./ios-export/ad-hoc.plist"
+  },
+  "app_store": {
+    "user_name": "",
+    "user_password": "",
+
+    "api_key": "",
+    "api_issuer": "",
+
+    "ios_export_plist": "./ios-export/app-store.plist"
+  },
+  "test_flight": {
+    "ios_export_plist": "./ios-export/ad-hoc.plist"
+  }
+}
