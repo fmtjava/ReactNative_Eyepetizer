@@ -1,5 +1,5 @@
 # ReactNative_Eyepetizer
-一款基于Flutter实现的精美仿开眼视频跨平台App,适合新手入门，快速掌握Dart语言的基本语法以及快速上手flutter开发。<br /><br />
+一款基于ReactNative + TypeScript实现的精美仿开眼视频跨平台App,适合新手入门，快速掌握TypeScript基本语法以及快速上手ReactNative开发。<br /><br />
 Kotlin版： [Kotlin_Eyepetizer](https://github.com/fmtjava/Kotlin_Eyepetizer)<br /><br />
 Flutter版：[Flutter_Eyepetizer]()
 
