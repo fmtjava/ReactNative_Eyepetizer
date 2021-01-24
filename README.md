@@ -4,7 +4,7 @@ Kotlin版： [Kotlin_Eyepetizer](https://github.com/fmtjava/Kotlin_Eyepetizer)<b
 Flutter版：[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)
 
 # 前言
- 前段时间有Github的小伙伴问[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)能不能提供一个ReactNative版本，因为目前的工作内容暂时没有涉及到这块内容，所以暂时就搁置了。最近公司的一个项目用到了个ReactNative混合开发，自己也参与了一部分开发，便借这个机会通过这个项目把学到的相关技能分享出来，因为目前对ReactNative处于初步入门阶段，希望Github的小伙伴多多Issues，留下你们的宝贵意见。当前如果觉得项目能够帮助到你们，也希望给一个给个 `Star` 或 `Fork` ^_^ ，谢谢**
+ 前段时间有Github的小伙伴问[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)能不能提供一个ReactNative版本，因为目前的工作暂时没有涉及这块内容，所以暂时就搁置了。最近公司的一个项目用到了个ReactNative混合开发，自己也参与了一部分开发，便通过这个项目把学到的相关技能分享出来，因为目前对ReactNative处于初步入门阶段，希望Github的小伙伴多多Issues，留下你们的宝贵意见。当前如果觉得项目能够帮助到你们，也希望给一个给个 `Star` 或 `Fork` ^_^ ，谢谢**
 
 # 项目截图
 <div style="float:right">
