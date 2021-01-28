@@ -27,7 +27,8 @@ class VideoRelateItem extends React.Component<IProps> {
         <View style={styles.videoInfo}>
           <Text style={styles.title}>{item.data.title}</Text>
           <Text style={styles.category}>
-            #{item.data.category} / {item.data.author.name}
+            #{item.data.category} /{' '}
+            {item.data.author == null ? '' : item.data.author.name}
           </Text>
         </View>
       </View>

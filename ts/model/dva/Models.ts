@@ -8,6 +8,7 @@ import video from './VideoModel';
 import hot from './HotModel';
 import hotTab from './HotTabModel';
 import search from './SearchModel';
+import topicDetail from './TopicDetailModel';
 
 const models = [
   daily,
@@ -20,6 +21,7 @@ const models = [
   hot,
   hotTab,
   search,
+  topicDetail,
 ];
 
 export type RootState = {
@@ -32,6 +34,7 @@ export type RootState = {
   video: typeof video.state;
   hot: typeof hot.state;
   search: typeof search.state;
+  topicDetail: typeof topicDetail.state;
 } & {
   //联合类型
   [key: string]: typeof hotTab.state;

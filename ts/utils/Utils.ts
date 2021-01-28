@@ -27,6 +27,10 @@ function formatDateMsByMS(millisecond: number) {
   return moment(new Date(millisecond)).format('mm:ss');
 }
 
+function formatDateMsByYMD(millisecond: number) {
+  return moment(new Date(millisecond)).format('yyyy/MM/DD');
+}
+
 function formatDateMsByYMDHM(millisecond: number) {
   return moment(new Date(millisecond)).format('yyyy/MM/DD HH:mm');
 }
@@ -45,6 +49,7 @@ export {
   STATUSBAR_HEIGHT,
   navigationRef,
   formatDateMsByMS,
+  formatDateMsByYMD,
   formatDateMsByYMDHM,
   share,
   navigate,

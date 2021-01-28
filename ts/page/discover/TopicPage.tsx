@@ -3,9 +3,10 @@ import RefreshListView from 'react-native-refresh-list-view';
 import {View, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect, ConnectedProps} from 'react-redux';
-import {FeedHeight, FeedWidth} from '@/utils/Utils';
+import {FeedHeight, FeedWidth, navigate} from '@/utils/Utils';
 import {RootState} from '@/model/dva/Models';
 import {ITopicList} from '@/model/TopicList';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const REFRESH_TYPE = 'topicList/onRefresh';
 const LOAD_MORE_TYPE = 'topicList/onLoadMore';
@@ -45,12 +46,16 @@ class TopicPage extends React.Component<ModelState> {
     return item.data.image;
   };
 
+  onPress = (item: ITopicList) => {
+    navigate('TopicDetail', {id: item.data.id});
+  };
+
   renderItem = ({item}: {item: ITopicList}) => {
     return (
-      <View>
+      <TouchableWithoutFeedback onPress={() => this.onPress(item)}>
         <FastImage source={{uri: item.data.image}} style={styles.image} />
         <View style={styles.line} />
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
 

@@ -17,11 +17,15 @@ import RecommendImageGallery, {
 } from '@/page/discover/RecommendImageGallery';
 import {IMasonry} from '@/model/Masonry';
 import RecommendVideoPage from '@/page/discover/RecommendVideoPage';
+import TopicDetailPage from '@/page/discover/TopicDetailPage';
 
 //定义每一个页面的名称以及进入页面传递参数的类型
 export type RootStackParamList = {
   BottomTabs: undefined;
   SearchPage: undefined;
+  TopicDetail: {
+    id: number;
+  };
   NewsDetail: {
     url: string;
   };
@@ -65,6 +69,7 @@ function RootStackScreen() {
         component={SearchPage}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="TopicDetail" component={TopicDetailPage} />
       <Stack.Screen
         name="NewsDetail"
         component={NewsDetailPage}
