@@ -18,6 +18,8 @@ import RecommendImageGallery, {
 import {IMasonry} from '@/model/Masonry';
 import RecommendVideoPage from '@/page/discover/RecommendVideoPage';
 import TopicDetailPage from '@/page/discover/TopicDetailPage';
+import CategoryDetailPage from '@/page/discover/CategoryDetailPage';
+import {ICategory} from '@/model/Category';
 
 //定义每一个页面的名称以及进入页面传递参数的类型
 export type RootStackParamList = {
@@ -31,6 +33,9 @@ export type RootStackParamList = {
   };
   VideoDetail: {
     item: Item;
+  };
+  CategoryDetail: {
+    item: ICategory;
   };
 };
 
@@ -80,6 +85,7 @@ function RootStackScreen() {
         component={VideoDetailPage}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="CategoryDetail" component={CategoryDetailPage} />
     </Stack.Navigator>
   );
 }

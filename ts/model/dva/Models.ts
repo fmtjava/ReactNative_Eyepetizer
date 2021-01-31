@@ -1,5 +1,6 @@
 import daily from './DailyModel';
 import category from './CategoryModel';
+import categoryDetail from './CategoryDetailModel';
 import topicList from './TopicListModel';
 import news from './NewsModel';
 import follow from './FollowModel';
@@ -13,6 +14,7 @@ import topicDetail from './TopicDetailModel';
 const models = [
   daily,
   category,
+  categoryDetail,
   topicList,
   news,
   follow,
@@ -27,6 +29,7 @@ const models = [
 export type RootState = {
   daily: typeof daily.state;
   category: typeof category.state;
+  categoryDetail: typeof categoryDetail.state;
   topicList: typeof topicList.state;
   news: typeof news.state;
   follow: typeof follow.state;

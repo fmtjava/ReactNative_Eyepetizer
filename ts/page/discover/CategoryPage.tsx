@@ -2,8 +2,16 @@ import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from '@/model/dva/Models';
 import {ICategory} from '@/model/Category';
-import {FlatList, Text, View, StyleSheet, RefreshControl} from 'react-native';
+import {
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  RefreshControl,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {navigate} from '@/utils/Utils';
 
 const REFRESH_TYPE = 'category/onRefresh';
 
@@ -34,17 +42,23 @@ class CategoryPage extends React.Component<ModelState> {
     return item.name;
   };
 
+  go2CategoryDetail = (item: ICategory) => {
+    navigate('CategoryDetail', {item: item});
+  };
+
   renderItem = ({item, index}: {item: ICategory; index: number}) => {
     return (
-      <View style={styles.item}>
-        <FastImage
-          source={{uri: item.bgPicture}}
-          style={index % 2 === 0 ? styles.leftImage : styles.rightImage}
-        />
-        <View style={styles.category}>
-          <Text style={styles.text}>#{item.name}</Text>
+      <TouchableWithoutFeedback onPress={() => this.go2CategoryDetail(item)}>
+        <View style={styles.item}>
+          <FastImage
+            source={{uri: item.bgPicture}}
+            style={index % 2 === 0 ? styles.leftImage : styles.rightImage}
+          />
+          <View style={styles.category}>
+            <Text style={styles.text}>#{item.name}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
   render() {
