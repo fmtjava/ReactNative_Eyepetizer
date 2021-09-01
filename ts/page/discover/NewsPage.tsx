@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import RefreshListView from 'react-native-refresh-list-view';
 import {RootState} from '@/model/dva/Models';
 import {INewsModel} from '@/model/News';
@@ -20,22 +20,25 @@ const mapStateToProps = ({news}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function NewsPage() {
+  const dispatch = useDispatch();
+  const {dataList, refreshState, nextPageUrl} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
-type ModelState = ConnectedProps<typeof connector>;
+  useEffect(() => {
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
 
-class NewsPage extends React.Component<ModelState> {
-  componentDidMount() {
-    this.onHeaderRefresh();
-  }
-  onHeaderRefresh = () => {
-    const {dispatch} = this.props;
+  const onHeaderRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
-  onFooterRefresh = () => {
-    const {dispatch, nextPageUrl} = this.props;
+  const onFooterRefresh = () => {
     dispatch({
       type: LOAD_MORE_TYPE,
       payload: {
@@ -43,7 +46,7 @@ class NewsPage extends React.Component<ModelState> {
       },
     });
   };
-  keyExtractor = (item: INewsModel, index: number) => {
+  const keyExtractor = (item: INewsModel, index: number) => {
     if (item.type === TEXT_CARD) {
       return `${item.data.text}_${TEXT_CARD}_${index}`;
     } else {
@@ -51,7 +54,7 @@ class NewsPage extends React.Component<ModelState> {
     }
   };
 
-  renderNews = (value: string) => {
+  const renderNews = (value: string) => {
     return (
       <Text key={value} style={styles.content}>
         {value}
@@ -59,7 +62,7 @@ class NewsPage extends React.Component<ModelState> {
     );
   };
 
-  onPress = (item: INewsModel) => {
+  const onPress = (item: INewsModel) => {
     let url = decodeURIComponent(
       item.data.actionUrl.substring(item.data.actionUrl.indexOf('url')),
     );
@@ -67,38 +70,35 @@ class NewsPage extends React.Component<ModelState> {
     navigate('NewsDetail', {url: url});
   };
 
-  renderItem = ({item}: {item: INewsModel}) => {
+  const renderItem = ({item}: {item: INewsModel}) => {
     if (item.type === TEXT_CARD) {
       return <Text style={styles.title}>{item.data.text}</Text>;
     } else {
       return (
-        <TouchableWithoutFeedback onPress={() => this.onPress(item)}>
+        <TouchableWithoutFeedback onPress={() => onPress(item)}>
           <View style={styles.card}>
             <FastImage
               source={{uri: item.data.backgroundImage}}
               style={styles.image}
             />
-            {item.data.titleList.map((value) => this.renderNews(value))}
+            {item.data.titleList.map((value) => renderNews(value))}
           </View>
         </TouchableWithoutFeedback>
       );
     }
   };
 
-  render() {
-    const {dataList, refreshState} = this.props;
-    return (
-      <RefreshListView
-        data={dataList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-        refreshState={refreshState}
-        onHeaderRefresh={this.onHeaderRefresh}
-        onFooterRefresh={this.onFooterRefresh}
-        showsVerticalScrollIndicator={false}
-      />
-    );
-  }
+  return (
+    <RefreshListView
+      data={dataList}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      refreshState={refreshState}
+      onHeaderRefresh={onHeaderRefresh}
+      onFooterRefresh={onFooterRefresh}
+      showsVerticalScrollIndicator={false}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -136,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(NewsPage);
+export default NewsPage;

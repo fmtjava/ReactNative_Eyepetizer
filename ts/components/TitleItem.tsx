@@ -6,15 +6,13 @@ interface IProps {
   item: Item;
 }
 
-class TitleItem extends React.Component<IProps> {
-  render() {
-    const {item} = this.props;
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{item.data.text}</Text>
-      </View>
-    );
-  }
+function TitleItem(props: IProps) {
+  const {item} = props;
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>{item.data.text}</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
-import React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
+import React, {useEffect} from 'react';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/model/dva/Models';
 import {ICategory} from '@/model/Category';
 import {
@@ -22,33 +22,33 @@ const mapStateToProps = ({category}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function CategoryPage() {
+  const dispatch = useDispatch();
+  const {refreshing, categoryList} = useSelector(mapStateToProps, shallowEqual);
 
-type ModelState = ConnectedProps<typeof connector>;
+  useEffect(() => {
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
 
-class CategoryPage extends React.Component<ModelState> {
-  componentDidMount() {
-    this.onRefresh();
-  }
-
-  onRefresh = () => {
-    const {dispatch} = this.props;
+  const onRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
 
-  keyExtractor = (item: ICategory) => {
+  const keyExtractor = (item: ICategory) => {
     return item.name;
   };
 
-  go2CategoryDetail = (item: ICategory) => {
+  const go2CategoryDetail = (item: ICategory) => {
     navigate('CategoryDetail', {item: item});
   };
 
-  renderItem = ({item, index}: {item: ICategory; index: number}) => {
+  const renderItem = ({item, index}: {item: ICategory; index: number}) => {
     return (
-      <TouchableWithoutFeedback onPress={() => this.go2CategoryDetail(item)}>
+      <TouchableWithoutFeedback onPress={() => go2CategoryDetail(item)}>
         <View style={styles.item}>
           <FastImage
             source={{uri: item.bgPicture}}
@@ -61,22 +61,19 @@ class CategoryPage extends React.Component<ModelState> {
       </TouchableWithoutFeedback>
     );
   };
-  render() {
-    const {refreshing, categoryList} = this.props;
-    return (
-      <FlatList
-        style={styles.container}
-        data={categoryList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-        }
-      />
-    );
-  }
+  return (
+    <FlatList
+      style={styles.container}
+      data={categoryList}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      numColumns={2}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -113,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(CategoryPage);
+export default CategoryPage;

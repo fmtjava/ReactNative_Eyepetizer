@@ -11,53 +11,51 @@ interface IProps {
   model: IFollowModel;
 }
 
-class FollowItem extends React.Component<IProps> {
-  onPress = (item: Item) => {
+function FollowItem(props: IProps) {
+  const onPress = (item: Item) => {
     navigate('VideoDetail', {item: item});
   };
-  renderItem = ({item}: {item: Item}) => {
+  const renderItem = ({item}: {item: Item}) => {
     return (
-      <TouchableWithoutFeedback onPress={() => this.onPress(item)}>
+      <TouchableWithoutFeedback onPress={() => onPress(item)}>
         <FollowHorizontalItem item={item} />
       </TouchableWithoutFeedback>
     );
   };
 
-  keyExtractor = (item: Item) => {
+  const keyExtractor = (item: Item) => {
     return `${item.data.playUrl}`;
   };
 
-  render() {
-    const {model} = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <FastImage
-            style={styles.headerImage}
-            source={{uri: model.data.header.icon}}
-          />
-          <View style={styles.headerDes}>
-            <Text style={styles.title}>{model.data.header.title}</Text>
-            <Text numberOfLines={1} style={styles.desc}>
-              {model.data.header.description}
-            </Text>
-          </View>
-          <View style={styles.follow}>
-            <Text style={styles.followText}>+ 关注</Text>
-          </View>
-        </View>
-        <FlatList
-          style={styles.horizontalList}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={model.data.itemList}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
+  const {model} = props;
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <FastImage
+          style={styles.headerImage}
+          source={{uri: model.data.header.icon}}
         />
-        <View style={styles.line} />
+        <View style={styles.headerDes}>
+          <Text style={styles.title}>{model.data.header.title}</Text>
+          <Text numberOfLines={1} style={styles.desc}>
+            {model.data.header.description}
+          </Text>
+        </View>
+        <View style={styles.follow}>
+          <Text style={styles.followText}>+ 关注</Text>
+        </View>
       </View>
-    );
-  }
+      <FlatList
+        style={styles.horizontalList}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={model.data.itemList}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
+      <View style={styles.line} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
