@@ -141,7 +141,7 @@ function SearchPage() {
     return <SearchVideoComponent item={item} />;
   };
 
-  const contentContainer = () => {
+  const ContentContainer = () => {
     if (showLoading) {
       return (
         <Spinner
@@ -152,12 +152,12 @@ function SearchPage() {
       );
     }
     if (dataList == null || dataList.length === 0) {
-      return keyWordContainerOrEmpty;
+      return <KeyWordContainerOrEmpty />;
     }
     return (
       <View style={styles.searchVideoContainer}>
         <Text style={styles.searchKey}>
-          — 「{keyword}」搜索结果共{total}个 —
+          — 「{keyword.current}」搜索结果共{total}个 —
         </Text>
         <RefreshListView
           data={dataList}
@@ -177,7 +177,7 @@ function SearchPage() {
     );
   };
 
-  const keyWordContainerOrEmpty = () => {
+  const KeyWordContainerOrEmpty = () => {
     if (showKeyWorkContainer) {
       return (
         <View>
@@ -216,7 +216,7 @@ function SearchPage() {
       });
   };
 
-  const searchView = () => {
+  const SearchView = () => {
     if (Platform.OS === 'ios') {
       return null;
     } else {
@@ -245,9 +245,9 @@ function SearchPage() {
             onSubmitEditing={onSubmit}
           />
         </View>
-        {searchView}
+        <SearchView />
       </View>
-      {contentContainer}
+      <ContentContainer />
     </SafeAreaView>
   );
 }
