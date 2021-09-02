@@ -1,5 +1,5 @@
-import React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
+import React, {useEffect} from 'react';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import RefreshListView, {RefreshState} from 'react-native-refresh-list-view';
 import {RootState} from '@/model/dva/Models';
 import {ListRenderItemInfo, StyleSheet, View} from 'react-native';
@@ -20,50 +20,59 @@ const mapStateToProps = ({categoryDetail}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
-interface IProps extends ModelState {
+interface IProps {
   navigation: RootNavigation;
   route: RouteProp<RootStackParamList, 'CategoryDetail'>;
 }
 
-class CategoryDetailPage extends React.Component<IProps> {
-  componentDidMount() {
-    const {navigation, route} = this.props;
-    navigation.setOptions({title: route.params.item.name});
-    this.onHeaderRefresh();
-  }
+function CategoryDetailPage(props: IProps) {
+  const dispatch = useDispatch();
+  const {dataList, refreshState, nextPageUrl} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
-  componentWillUnmount() {
-    const {dispatch} = this.props;
-    dispatch({
-      type: CLEAR_TYPE,
-      payload: {
-        dataList: [],
-        refreshState: RefreshState.Idle,
-        nextPageUrl: null,
-      },
-    });
-  }
-
-  onHeaderRefresh = () => {
-    const {dispatch, route} = this.props;
+  useEffect(() => {
+    props.navigation.setOptions({title: props.route.params.item.name});
     dispatch({
       type: REFRESH_TYPE,
       payload: {
-        id: route.params.item.id,
+        id: props.route.params.item.id,
+      },
+    });
+  }, [
+    props.navigation,
+    dispatch,
+    props.route.params.item.name,
+    props.route.params.item.id,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: CLEAR_TYPE,
+        payload: {
+          dataList: [],
+          refreshState: RefreshState.Idle,
+          nextPageUrl: null,
+        },
+      });
+    };
+  }, [dispatch]);
+
+  const onHeaderRefresh = () => {
+    dispatch({
+      type: REFRESH_TYPE,
+      payload: {
+        id: props.route.params.item.id,
       },
     });
   };
 
-  onFooterRefresh = () => {
-    const {nextPageUrl} = this.props;
+  const onFooterRefresh = () => {
     if (nextPageUrl == null) {
       return;
     }
-    const {dispatch} = this.props;
     dispatch({
       type: LOAD_MORE_TYPE,
       payload: {
@@ -72,30 +81,27 @@ class CategoryDetailPage extends React.Component<IProps> {
     });
   };
 
-  renderItem = ({item}: ListRenderItemInfo<Item>) => {
+  const renderItem = ({item}: ListRenderItemInfo<Item>) => {
     return <ImageTextItem item={item} />;
   };
 
-  keyExtractor = (item: Item) => {
+  const keyExtractor = (item: Item) => {
     return `${item.data.id}`;
   };
 
-  render() {
-    const {dataList, refreshState} = this.props;
-    return (
-      <View style={styles.container}>
-        <RefreshListView
-          data={dataList}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          refreshState={refreshState}
-          onHeaderRefresh={this.onHeaderRefresh}
-          onFooterRefresh={this.onFooterRefresh}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <RefreshListView
+        data={dataList}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        refreshState={refreshState}
+        onHeaderRefresh={onHeaderRefresh}
+        onFooterRefresh={onFooterRefresh}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -104,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(CategoryDetailPage);
+export default CategoryDetailPage;

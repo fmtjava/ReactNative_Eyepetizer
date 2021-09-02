@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Platform, StyleSheet} from 'react-native';
 import HotTabPage from '@/page/hot/HotTabPage';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/model/dva/Models';
 import {ITab} from '@/model/Tab';
 import {createHotTabModel} from '@/config/dva';
@@ -25,20 +25,19 @@ const mapStateToProps = ({hot}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
 const Tab = createMaterialTopTabNavigator<HotTabParamList>();
 
-class HotTabs extends React.Component<ModelState> {
-  componentDidMount() {
-    const {dispatch} = this.props;
+function HotTabs() {
+  const dispatch = useDispatch();
+  const {showLoading, tabList} = useSelector(mapStateToProps, shallowEqual);
+
+  useEffect(() => {
     dispatch({
       type: TAB_LIST_TYPE,
     });
-  }
-  renderScreen = (tab: ITab) => {
+  }, [dispatch]);
+
+  const renderScreen = (tab: ITab) => {
     //动态创建每个Tab页面对于的Model对象
     createHotTabModel(tab.name);
     return (
@@ -54,49 +53,46 @@ class HotTabs extends React.Component<ModelState> {
       />
     );
   };
-  render() {
-    const {showLoading, tabList} = this.props;
-    if (showLoading) {
-      return (
-        <Spinner
-          visible={showLoading}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-      );
-    }
-    if (tabList.length === 0) {
-      return null;
-    }
+  if (showLoading) {
     return (
-      <Tab.Navigator
-        lazy
-        sceneContainerStyle={styles.sceneContainerStyle}
-        tabBarOptions={{
-          style: {
-            ...Platform.select({
-              android: {
-                elevation: 0,
-                borderBottomWidth: 0,
-              },
-              ios: {
-                shadowOpacity: 0,
-              },
-            }),
-          },
-          indicatorStyle: {
-            width: 50,
-            height: 2.4,
-            marginLeft: 45,
-            backgroundColor: '#000000',
-          },
-          activeTintColor: '#000000',
-          inactiveTintColor: '#9a9a9a',
-        }}>
-        {tabList.map(this.renderScreen)}
-      </Tab.Navigator>
+      <Spinner
+        visible={showLoading}
+        textContent={'Loading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
     );
   }
+  if (tabList.length === 0) {
+    return null;
+  }
+  return (
+    <Tab.Navigator
+      lazy
+      sceneContainerStyle={styles.sceneContainerStyle}
+      tabBarOptions={{
+        style: {
+          ...Platform.select({
+            android: {
+              elevation: 0,
+              borderBottomWidth: 0,
+            },
+            ios: {
+              shadowOpacity: 0,
+            },
+          }),
+        },
+        indicatorStyle: {
+          width: 50,
+          height: 2.4,
+          marginLeft: 45,
+          backgroundColor: '#000000',
+        },
+        activeTintColor: '#000000',
+        inactiveTintColor: '#9a9a9a',
+      }}>
+      {tabList.map(renderScreen)}
+    </Tab.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -108,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(HotTabs);
+export default HotTabs;

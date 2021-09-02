@@ -14,12 +14,12 @@ interface IProps {
   item: ITopicDetailItem;
 }
 
-class TopicDetailItem extends React.Component<IProps> {
-  go2VideoDetail = (item: Item) => {
+function TopicDetailItem(props: IProps) {
+  const go2VideoDetail = (item: Item) => {
     navigate('VideoDetail', {item: item});
   };
 
-  tagItem = (value: Tag) => {
+  const tagItem = (value: Tag) => {
     return (
       <View key={value.name} style={styles.tag}>
         <Text style={styles.tagText}>{value.name}</Text>
@@ -27,80 +27,75 @@ class TopicDetailItem extends React.Component<IProps> {
     );
   };
 
-  render() {
-    const {item} = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.headContainer}>
-          <FastImage
-            style={styles.icon}
-            source={{
-              uri: item.data.header.icon,
-            }}
-          />
-          <View style={styles.headLeftContainer}>
-            <Text style={styles.issuerName}>{item.data.header.issuerName}</Text>
-            <View style={styles.headBottomContainer}>
-              <Text style={styles.time}>
-                {formatDateMsByYMD(item.data.header.time)}发布:
-              </Text>
-              <Text numberOfLines={1} style={styles.title}>
-                {item.data.content.data.title}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <Text numberOfLines={2} style={styles.description}>
-          {item.data.content.data.description}
-        </Text>
-
-        <View style={styles.tagContainer}>
-          {item.data.content.data.tags.length > 3
-            ? item.data.content.data.tags
-                .slice(0, 3)
-                .map((value) => this.tagItem(value))
-            : item.data.content.data.tags.map((value) => this.tagItem(value))}
-        </View>
-        <TouchableWithoutFeedback
-          onPress={() => this.go2VideoDetail(item.data.content)}>
-          <FastImage
-            style={styles.feed}
-            source={{
-              uri: item.data.content.data.cover.feed,
-            }}
-          />
-        </TouchableWithoutFeedback>
-        <View style={styles.consumeContainer}>
-          <View style={styles.consumeItem}>
-            <IconLove size={22} color="#9a9a9a" />
-            <Text style={styles.consumeText}>
-              {item.data.content.data.consumption.collectionCount}
+  const {item} = props;
+  return (
+    <View style={styles.container}>
+      <View style={styles.headContainer}>
+        <FastImage
+          style={styles.icon}
+          source={{
+            uri: item.data.header.icon,
+          }}
+        />
+        <View style={styles.headLeftContainer}>
+          <Text style={styles.issuerName}>{item.data.header.issuerName}</Text>
+          <View style={styles.headBottomContainer}>
+            <Text style={styles.time}>
+              {formatDateMsByYMD(item.data.header.time)}发布:
+            </Text>
+            <Text numberOfLines={1} style={styles.title}>
+              {item.data.content.data.title}
             </Text>
           </View>
-          <View style={styles.consumeItem}>
-            <IconCommentlinesFill size={16} color="#9a9a9a" />
-            <Text style={styles.consumeText}>
-              {item.data.content.data.consumption.replyCount}
-            </Text>
-          </View>
-          <View style={styles.consumeItem}>
-            <IconStar color="#9a9a9a" />
-            <Text style={styles.consumeText}>收藏</Text>
-          </View>
-          <IconShare1
-            color="#9a9a9a"
-            onPress={() =>
-              share(
-                item.data.content.data.title,
-                item.data.content.data.playUrl,
-              )
-            }
-          />
         </View>
-        <View style={styles.line} />
       </View>
-    );
-  }
+      <Text numberOfLines={2} style={styles.description}>
+        {item.data.content.data.description}
+      </Text>
+
+      <View style={styles.tagContainer}>
+        {item.data.content.data.tags.length > 3
+          ? item.data.content.data.tags
+              .slice(0, 3)
+              .map((value) => tagItem(value))
+          : item.data.content.data.tags.map((value) => tagItem(value))}
+      </View>
+      <TouchableWithoutFeedback
+        onPress={() => go2VideoDetail(item.data.content)}>
+        <FastImage
+          style={styles.feed}
+          source={{
+            uri: item.data.content.data.cover.feed,
+          }}
+        />
+      </TouchableWithoutFeedback>
+      <View style={styles.consumeContainer}>
+        <View style={styles.consumeItem}>
+          <IconLove size={22} color="#9a9a9a" />
+          <Text style={styles.consumeText}>
+            {item.data.content.data.consumption.collectionCount}
+          </Text>
+        </View>
+        <View style={styles.consumeItem}>
+          <IconCommentlinesFill size={16} color="#9a9a9a" />
+          <Text style={styles.consumeText}>
+            {item.data.content.data.consumption.replyCount}
+          </Text>
+        </View>
+        <View style={styles.consumeItem}>
+          <IconStar color="#9a9a9a" />
+          <Text style={styles.consumeText}>收藏</Text>
+        </View>
+        <IconShare1
+          color="#9a9a9a"
+          onPress={() =>
+            share(item.data.content.data.title, item.data.content.data.playUrl)
+          }
+        />
+      </View>
+      <View style={styles.line} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -3,8 +3,8 @@ import {RootState} from '@/model/dva/Models';
 import {RootNavigation, RootStackParamList} from '@/navigator/Router';
 import {ScreenWidth} from '@/utils/Utils';
 import {RouteProp} from '@react-navigation/native';
-import {connect, ConnectedProps} from 'react-redux';
-import React from 'react';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
 import {StyleSheet, FlatList, Text, View, RefreshControl} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {ITopicDetailItem} from '@/model/TopicDetail';
@@ -19,52 +19,55 @@ const mapStateToProps = ({topicDetail}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
-interface IProps extends ModelState {
+interface IProps {
   navigation: RootNavigation;
   route: RouteProp<RootStackParamList, 'TopicDetail'>;
 }
 
-class TopicDetailPage extends React.Component<IProps> {
-  componentDidMount() {
-    this.onRefresh();
-  }
+function TopicDetailPage(props: IProps) {
+  const dispatch = useDispatch();
+  const {refreshing, topDetail} = useSelector(mapStateToProps, shallowEqual);
 
-  componentDidUpdate() {
-    const {navigation, topDetail} = this.props;
-    if (topDetail != null) {
-      navigation.setOptions({
-        title: topDetail.brief,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    const {dispatch} = this.props;
-    dispatch({
-      type: CLEAR_TYPE,
-      payload: {
-        topDetail: null,
-        refreshing: true,
-      },
-    });
-  }
-
-  onRefresh = () => {
-    const {dispatch, route} = this.props;
+  useEffect(() => {
     dispatch({
       type: REFRESH_TYPE,
       payload: {
-        id: route.params.id,
+        id: props.route.params.id,
+      },
+    });
+  }, [dispatch, props.route.params.id]);
+
+  useEffect(() => {
+    if (topDetail != null) {
+      props.navigation.setOptions({
+        title: topDetail.brief,
+      });
+    }
+  }, [topDetail, props.navigation]);
+
+  useEffect(() => {
+    //页面退出时，清理数据
+    return () => {
+      dispatch({
+        type: CLEAR_TYPE,
+        payload: {
+          topDetail: null,
+          refreshing: true,
+        },
+      });
+    };
+  }, [dispatch]);
+
+  const onRefresh = () => {
+    dispatch({
+      type: REFRESH_TYPE,
+      payload: {
+        id: props.route.params.id,
       },
     });
   };
 
-  get renderHeader() {
-    const {topDetail} = this.props;
+  const renderHeader = () => {
     if (topDetail == null) {
       return null;
     }
@@ -82,32 +85,29 @@ class TopicDetailPage extends React.Component<IProps> {
         <Text style={styles.desText}>{topDetail.text}</Text>
       </View>
     );
-  }
+  };
 
-  keyExtractor = (item: ITopicDetailItem) => {
+  const keyExtractor = (item: ITopicDetailItem) => {
     return `${item.data.content.data.id}`;
   };
 
-  renderItem = ({item}: {item: ITopicDetailItem}) => {
+  const renderItem = ({item}: {item: ITopicDetailItem}) => {
     return <TopicDetailItem item={item} />;
   };
 
-  render() {
-    const {topDetail, refreshing} = this.props;
-    return (
-      <FlatList
-        style={styles.container}
-        data={topDetail?.itemList}
-        keyExtractor={this.keyExtractor}
-        renderItem={this.renderItem}
-        ListHeaderComponent={this.renderHeader}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-        }
-      />
-    );
-  }
+  return (
+    <FlatList
+      style={styles.container}
+      data={topDetail?.itemList}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ListHeaderComponent={renderHeader}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -146,4 +146,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(TopicDetailPage);
+export default TopicDetailPage;

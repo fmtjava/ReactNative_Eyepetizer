@@ -3,7 +3,7 @@ import IconIShare from '@/assets/iconfont/IconIShare';
 import IconLove from '@/assets/iconfont/IconLove';
 import {RootState} from '@/model/dva/Models';
 import {RootStackParamList} from '@/navigator/Router';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {
   formatDateMsByYMDHM,
   navigate,
@@ -11,7 +11,7 @@ import {
   ScreenWidth,
 } from '@/utils/Utils';
 import {RouteProp} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import FastImage from 'react-native-fast-image';
 import {
   View,
@@ -37,56 +37,60 @@ const mapStateToProps = ({video}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
-
-type ModelState = ConnectedProps<typeof connector>;
-
-interface IProps extends ModelState {
+interface IProps {
   route: RouteProp<RootStackParamList, 'VideoDetail'>;
 }
 
-class VideoDetailPage extends React.Component<IProps> {
-  componentDidMount() {
-    this.onRefresh();
-  }
+function VideoDetailPage(props: IProps) {
+  const {refreshing, relateVideoList} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
+  const dispatch = useDispatch();
 
-  onRefresh = () => {
-    const {route, dispatch} = this.props;
+  useEffect(() => {
     dispatch({
       type: REFRESH_TYPE,
       payload: {
-        id: route.params.item.data.id,
+        id: props.route.params.item.data.id,
+      },
+    });
+  }, [dispatch, props.route.params.item.data.id]);
+
+  const onRefresh = () => {
+    dispatch({
+      type: REFRESH_TYPE,
+      payload: {
+        id: props.route.params.item.data.id,
       },
     });
   };
 
-  onPress = (item: Item) => {
+  const onPress = (item: Item) => {
     navigate('VideoDetail', {item: item});
   };
 
-  renderItem = ({item}: ListRenderItemInfo<Item>) => {
+  const renderItem = ({item}: ListRenderItemInfo<Item>) => {
     return item.type !== VIDEO_SMALL_CARD_TYPE ? (
       <Text style={styles.relateTitle}>{item.data.text}</Text>
     ) : (
-      <TouchableWithoutFeedback onPress={() => this.onPress(item)}>
+      <TouchableWithoutFeedback onPress={() => onPress(item)}>
         <VideoRelateItem item={item} />
       </TouchableWithoutFeedback>
     );
   };
 
-  keyExtractor = (item: Item) => {
+  const keyExtractor = (item: Item) => {
     return item.data.title ? item.data.title : item.data.text;
   };
 
-  get renderHeader() {
-    const {route} = this.props;
-    const item = route.params.item;
+  const renderHeader = () => {
+    const item = props.route.params.item;
     return (
       <View>
         <Text style={styles.title}>{item.data.title}</Text>
         <Text style={styles.category}>
-          #{item.data.category} /{' '}
-          {formatDateMsByYMDHM(item.data.author.latestReleaseTime)}
+          #{item.data.category} / {formatDateMsByYMDHM(item.data.releaseTime)}
         </Text>
         <Text style={styles.description}>{item.data.description}</Text>
         <View style={styles.consumption}>
@@ -126,44 +130,38 @@ class VideoDetailPage extends React.Component<IProps> {
         <View style={styles.line} />
       </View>
     );
-  }
+  };
 
-  render() {
-    const {route, refreshing, relateVideoList} = this.props;
-    const {item} = route.params;
-    const backgroundImagePath = `${item.data.cover.blurred}/${ScreenHeight}x${ScreenWidth}`;
-    return (
-      <ImageBackground
-        style={styles.backgroundImage}
-        source={{uri: backgroundImagePath}}>
-        <Video
-          url={item.data.playUrl}
-          logo={undefined}
-          hideFullScreenControl={false}
-          autoPlay={true}
-          rotateToFullScreen
-          playInBackground={false}
-          playWhenInactive={true}
-          scrollBounce={true}
-          lockPortraitOnFsExit={true}
-          lockRatio={16 / 9}
-        />
-        <FlatList
-          data={relateVideoList}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={this.renderHeader}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={this.onRefresh}
-            />
-          }
-        />
-      </ImageBackground>
-    );
-  }
+  const {item} = props.route.params;
+  const backgroundImagePath = `${item.data.cover.blurred}/${ScreenHeight}x${ScreenWidth}`;
+  return (
+    <ImageBackground
+      style={styles.backgroundImage}
+      source={{uri: backgroundImagePath}}>
+      <Video
+        url={item.data.playUrl}
+        logo={undefined}
+        hideFullScreenControl={false}
+        autoPlay={true}
+        rotateToFullScreen
+        playInBackground={false}
+        playWhenInactive={true}
+        scrollBounce={true}
+        lockPortraitOnFsExit={true}
+        lockRatio={16 / 9}
+      />
+      <FlatList
+        data={relateVideoList}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={renderHeader}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+    </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -258,4 +256,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(VideoDetailPage);
+export default VideoDetailPage;

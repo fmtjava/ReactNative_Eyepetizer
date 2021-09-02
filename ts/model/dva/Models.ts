@@ -11,6 +11,7 @@ import hotTab from './HotTabModel';
 import search from './SearchModel';
 import topicDetail from './TopicDetailModel';
 
+//存储项目中每一个页面对应的数据仓库
 const models = [
   daily,
   category,
@@ -26,6 +27,7 @@ const models = [
   topicDetail,
 ];
 
+//存储每一个页面所需的数据状态
 export type RootState = {
   daily: typeof daily.state;
   category: typeof category.state;
