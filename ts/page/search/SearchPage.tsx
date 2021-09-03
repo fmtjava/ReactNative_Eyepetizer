@@ -54,15 +54,17 @@ function SearchPage() {
   const keyword = useRef('');
 
   const dispatch = useDispatch();
-  const {
-    showLoading,
-    showKeyWorkContainer,
-    keyWordList,
-    dataList,
-    refreshState,
-    nextPageUrl,
-    total,
-  } = useSelector(mapStateToProps, shallowEqual);
+
+  const {showLoading} = useSelector(mapStateToProps, shallowEqual);
+
+  const {showKeyWorkContainer} = useSelector(mapStateToProps, shallowEqual);
+
+  const {keyWordList} = useSelector(mapStateToProps, shallowEqual);
+
+  const {dataList, refreshState, nextPageUrl, total} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
   useEffect(() => {
     dispatch({
@@ -141,42 +143,6 @@ function SearchPage() {
     return <SearchVideoComponent item={item} />;
   };
 
-  const ContentContainer = () => {
-    if (showLoading) {
-      return (
-        <Spinner
-          visible={showLoading}
-          textContent={'Loading...'}
-          textStyle={styles.spinnerTextStyle}
-        />
-      );
-    }
-    if (dataList == null || dataList.length === 0) {
-      return <KeyWordContainerOrEmpty />;
-    }
-    return (
-      <View style={styles.searchVideoContainer}>
-        <Text style={styles.searchKey}>
-          — 「{keyword.current}」搜索结果共{total}个 —
-        </Text>
-        <RefreshListView
-          data={dataList}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          refreshState={refreshState}
-          onHeaderRefresh={onHeaderRefresh}
-          onFooterRefresh={onFooterRefresh}
-          showsVerticalScrollIndicator={false}
-          getItemLayout={(_data: Item, index: number) => ({
-            length: FeedHeight,
-            offset: FeedHeight * index,
-            index,
-          })}
-        />
-      </View>
-    );
-  };
-
   const KeyWordContainerOrEmpty = () => {
     if (showKeyWorkContainer) {
       return (
@@ -247,7 +213,44 @@ function SearchPage() {
         </View>
         <SearchView />
       </View>
-      <ContentContainer />
+      {showLoading && (
+        <>
+          <Spinner
+            visible={showLoading}
+            textContent={'Loading...'}
+            textStyle={styles.spinnerTextStyle}
+          />
+        </>
+      )}
+      {dataList == null ||
+        (dataList.length === 0 && (
+          <>
+            <KeyWordContainerOrEmpty />
+          </>
+        ))}
+      {total > 0 && (
+        <>
+          <View style={styles.searchVideoContainer}>
+            <Text style={styles.searchKey}>
+              — 「{keyword.current}」搜索结果共{total}个 —
+            </Text>
+            <RefreshListView
+              data={dataList}
+              keyExtractor={keyExtractor}
+              renderItem={renderItem}
+              refreshState={refreshState}
+              onHeaderRefresh={onHeaderRefresh}
+              onFooterRefresh={onFooterRefresh}
+              showsVerticalScrollIndicator={false}
+              getItemLayout={(_data: Item, index: number) => ({
+                length: FeedHeight,
+                offset: FeedHeight * index,
+                index,
+              })}
+            />
+          </View>
+        </>
+      )}
     </SafeAreaView>
   );
 }

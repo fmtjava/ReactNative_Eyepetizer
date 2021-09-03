@@ -6090,6 +6090,11 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0, react
   resolved "https://registry.npm.taobao.org/react-is/download/react-is-16.13.1.tgz?cache=0&sync_timestamp=1608330338071&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-is%2Fdownload%2Freact-is-16.13.1.tgz"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
 
+react-native-animated-header@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.nlark.com/react-native-animated-header/download/react-native-animated-header-1.0.7.tgz#df9793e60b86e9106b31dcb1a3f2ef4ac37c0db9"
+  integrity sha1-35eT5guG6RBrMdyxo/LvSsN8Dbk=
+
 react-native-config@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npm.taobao.org/react-native-config/download/react-native-config-1.4.1.tgz"
