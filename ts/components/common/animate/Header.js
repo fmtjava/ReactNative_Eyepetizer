@@ -7,15 +7,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {isIphoneX} from 'react-native-iphone-x-helper';
+import {STATUSBAR_HEIGHT} from '@/utils/Utils';
 
 const ios = Platform.OS === 'ios';
-const isIphoneX_ = isIphoneX();
-const iphoneXTopInset = 24;
 const initToolbarHeight = ios ? 46 : 56;
 
 const paddingTop = ios ? 18 : 0;
-const topInset = isIphoneX_ ? iphoneXTopInset : 0;
+const topInset = STATUSBAR_HEIGHT;
 
 const toolbarHeight = initToolbarHeight + topInset + paddingTop;
 

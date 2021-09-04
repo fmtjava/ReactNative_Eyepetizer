@@ -92,6 +92,7 @@ function CategoryDetailPage(props: IProps) {
       title={props.route.params.item.name}
       renderLeft={backIcon}
       headerMaxHeight={200}
+      noBorder={true}
       imageSource={{
         uri: props.route.params.item.headerImage,
       }}
