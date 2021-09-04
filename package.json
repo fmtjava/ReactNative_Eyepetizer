@@ -28,7 +28,6 @@
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-native": "0.63.3",
-    "react-native-animated-header": "^1.0.7",
     "react-native-config": "^1.4.1",
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.9.0",
