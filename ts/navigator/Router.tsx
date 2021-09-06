@@ -17,16 +17,25 @@ import RecommendImageGallery, {
 } from '@/page/discover/RecommendImageGallery';
 import {IMasonry} from '@/model/Masonry';
 import RecommendVideoPage from '@/page/discover/RecommendVideoPage';
+import TopicDetailPage from '@/page/discover/TopicDetailPage';
+import CategoryDetailPage from '@/page/discover/CategoryDetailPage';
+import {ICategory} from '@/model/Category';
 
-//定义每一个页面的名称以及进入页面传递参数的类型
+//定义堆栈路由参数每一个页面的名称以及进入页面传递参数的类型
 export type RootStackParamList = {
   BottomTabs: undefined;
   SearchPage: undefined;
+  TopicDetail: {
+    id: number;
+  };
   NewsDetail: {
     url: string;
   };
   VideoDetail: {
     item: Item;
+  };
+  CategoryDetail: {
+    item: ICategory;
   };
 };
 
@@ -36,6 +45,7 @@ export type RootNavigation = StackNavigationProp<RootStackParamList>;
 //创建堆栈导航器
 const Stack = createStackNavigator<RootStackParamList>();
 
+//配置堆栈路由页面
 function RootStackScreen() {
   return (
     <Stack.Navigator
@@ -65,6 +75,7 @@ function RootStackScreen() {
         component={SearchPage}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="TopicDetail" component={TopicDetailPage} />
       <Stack.Screen
         name="NewsDetail"
         component={NewsDetailPage}
@@ -75,10 +86,16 @@ function RootStackScreen() {
         component={VideoDetailPage}
         options={{headerShown: false}}
       />
+      <Stack.Screen
+        name="CategoryDetail"
+        component={CategoryDetailPage}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 }
 
+//定义模态路由参数每一个页面的名称以及进入页面传递参数的类型
 export type ModalStackParamList = {
   Root: undefined;
   Gallery: {
@@ -89,8 +106,10 @@ export type ModalStackParamList = {
   };
 };
 
+//导出模态路由导航参数，方便外界调用
 export type ModalStackNavigation = StackNavigationProp<ModalStackParamList>;
 
+//创建模态路由导航
 const ModalStack = createStackNavigator<ModalStackParamList>();
 
 function ModalStackScreen() {

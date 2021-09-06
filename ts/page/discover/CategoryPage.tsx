@@ -1,9 +1,17 @@
-import React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
+import React, {useEffect} from 'react';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {RootState} from '@/model/dva/Models';
 import {ICategory} from '@/model/Category';
-import {FlatList, Text, View, StyleSheet, RefreshControl} from 'react-native';
+import {
+  FlatList,
+  Text,
+  View,
+  StyleSheet,
+  RefreshControl,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {navigate} from '@/utils/Utils';
 
 const REFRESH_TYPE = 'category/onRefresh';
 
@@ -14,55 +22,58 @@ const mapStateToProps = ({category}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function CategoryPage() {
+  const dispatch = useDispatch();
+  const {refreshing, categoryList} = useSelector(mapStateToProps, shallowEqual);
 
-type ModelState = ConnectedProps<typeof connector>;
+  useEffect(() => {
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
 
-class CategoryPage extends React.Component<ModelState> {
-  componentDidMount() {
-    this.onRefresh();
-  }
-
-  onRefresh = () => {
-    const {dispatch} = this.props;
+  const onRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
 
-  keyExtractor = (item: ICategory) => {
+  const keyExtractor = (item: ICategory) => {
     return item.name;
   };
 
-  renderItem = ({item, index}: {item: ICategory; index: number}) => {
+  const go2CategoryDetail = (item: ICategory) => {
+    navigate('CategoryDetail', {item: item});
+  };
+
+  const renderItem = ({item, index}: {item: ICategory; index: number}) => {
     return (
-      <View style={styles.item}>
-        <FastImage
-          source={{uri: item.bgPicture}}
-          style={index % 2 === 0 ? styles.leftImage : styles.rightImage}
-        />
-        <View style={styles.category}>
-          <Text style={styles.text}>#{item.name}</Text>
+      <TouchableWithoutFeedback onPress={() => go2CategoryDetail(item)}>
+        <View style={styles.item}>
+          <FastImage
+            source={{uri: item.bgPicture}}
+            style={index % 2 === 0 ? styles.leftImage : styles.rightImage}
+          />
+          <View style={styles.category}>
+            <Text style={styles.text}>#{item.name}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
-  render() {
-    const {refreshing, categoryList} = this.props;
-    return (
-      <FlatList
-        style={styles.container}
-        data={categoryList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={this.onRefresh} />
-        }
-      />
-    );
-  }
+  return (
+    <FlatList
+      style={styles.container}
+      data={categoryList}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      numColumns={2}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -99,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(CategoryPage);
+export default CategoryPage;

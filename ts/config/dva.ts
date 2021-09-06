@@ -16,7 +16,7 @@ export default app._store;
 
 //防止Model被重复创建,类似与Map
 const cached = new Map<string, boolean>();
-
+//动态创建热门标签
 export function createHotTabModel(namespace: string) {
   if (!cached.get(namespace)) {
     const model = modelExtend(hotTab, {namespace});

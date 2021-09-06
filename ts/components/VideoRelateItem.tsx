@@ -8,31 +8,27 @@ interface IProps {
   item: Item;
 }
 
-class VideoRelateItem extends React.Component<IProps> {
-  render() {
-    const {item} = this.props;
-    return (
-      <View style={styles.container}>
-        <View style={styles.feedContainer}>
-          <FastImage
-            source={{uri: item.data.cover.feed}}
-            style={styles.image}
-          />
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>
-              {formatDateMsByMS(item.data.duration * 1000)}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.videoInfo}>
-          <Text style={styles.title}>{item.data.title}</Text>
-          <Text style={styles.category}>
-            #{item.data.category} / {item.data.author.name}
+function VideoRelateItem(props: IProps) {
+  const {item} = props;
+  return (
+    <View style={styles.container}>
+      <View style={styles.feedContainer}>
+        <FastImage source={{uri: item.data.cover.feed}} style={styles.image} />
+        <View style={styles.timeContainer}>
+          <Text style={styles.timeText}>
+            {formatDateMsByMS(item.data.duration * 1000)}
           </Text>
         </View>
       </View>
-    );
-  }
+      <View style={styles.videoInfo}>
+        <Text style={styles.title}>{item.data.title}</Text>
+        <Text style={styles.category}>
+          #{item.data.category} /{' '}
+          {item.data.author == null ? '' : item.data.author.name}
+        </Text>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

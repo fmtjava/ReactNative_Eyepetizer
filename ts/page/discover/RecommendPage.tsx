@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {RootState} from '@/model/dva/Models';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import MasonryList from 'react-native-masonry-list';
 import {Image, RefreshControl, StyleSheet, Text, View} from 'react-native';
 import IconDianzan from '@/assets/iconfont/IconDianzan';
@@ -23,24 +23,27 @@ const mapStateToProps = ({recommend}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function RecommendPage() {
+  const dispatch = useDispatch();
+  const {refreshState, nextPageUrl, images} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
-type ModelState = ConnectedProps<typeof connector>;
-
-class RecommendPage extends React.Component<ModelState> {
-  componentDidMount() {
+  useEffect(() => {
     console.disableYellowBox = true;
-    this.onHeaderRefresh();
-  }
-  onHeaderRefresh = () => {
-    const {dispatch} = this.props;
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
+
+  const onHeaderRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
 
-  onFooterRefresh = () => {
-    const {dispatch, nextPageUrl} = this.props;
+  const onFooterRefresh = () => {
     dispatch({
       type: LOAD_MORE_TYPE,
       payload: {
@@ -49,16 +52,15 @@ class RecommendPage extends React.Component<ModelState> {
     });
   };
 
-  onEndReached = () => {
-    const {refreshState} = this.props;
+  const onEndReached = () => {
     //避免多次加载出现重复数据
     if (refreshState !== RefreshState.Idle) {
       return;
     }
-    this.onFooterRefresh();
+    onFooterRefresh();
   };
 
-  icon(data: IMasonry) {
+  const icon = (data: IMasonry) => {
     if (data.type === VIDEO_TYPE) {
       return <IconFont style={styles.icon} color="#fff" name="icon-Video" />;
     } else {
@@ -78,22 +80,22 @@ class RecommendPage extends React.Component<ModelState> {
         return null;
       }
     }
-  }
+  };
 
-  onPressImage = (item: IMasonry) => {
+  const onPressImage = (item: IMasonry) => {
     if (item.type === VIDEO_TYPE) {
       navigate('RecommendVideo', {masonry: item});
     } else {
-      const images = item.urls.map((value) => {
+      const imageList = item.urls.map((value) => {
         return {
           url: value,
         };
       });
-      navigate('Gallery', {images: images});
+      navigate('Gallery', {images: imageList});
     }
   };
 
-  renderIndividualHeader = (data: IMasonry) => {
+  const renderIndividualHeader = (data: IMasonry) => {
     return (
       <View
         style={[
@@ -103,12 +105,12 @@ class RecommendPage extends React.Component<ModelState> {
           },
           styles.masonryHeader,
         ]}>
-        {this.icon(data)}
+        {icon(data)}
       </View>
     );
   };
 
-  renderIndividualFooter = (data: IMasonry) => {
+  const renderIndividualFooter = (data: IMasonry) => {
     return (
       <View
         style={[
@@ -137,50 +139,46 @@ class RecommendPage extends React.Component<ModelState> {
     );
   };
 
-  retry = () => {
-    const {images} = this.props;
+  const retry = () => {
     if (images.length === 0) {
-      this.onHeaderRefresh();
+      onHeaderRefresh();
     } else {
-      this.onFooterRefresh();
+      onFooterRefresh();
     }
   };
 
-  render() {
-    const {refreshState, images} = this.props;
-    return (
-      <MasonryList
-        images={images}
-        onPressImage={this.onPressImage}
-        onEndReached={this.onEndReached}
-        onEndReachedThreshold={0.1}
-        imageContainerStyle={styles.imageContainerStyle}
-        renderIndividualHeader={this.renderIndividualHeader}
-        renderIndividualFooter={this.renderIndividualFooter}
-        spacing={2}
-        refreshing={true}
-        backgroundColor={'#F5F5F5'}
-        listContainerStyle={styles.listContainerStyle}
-        customImageComponent={FastImage}
-        masonryFlatListColProps={{
-          ListFooterComponent: (
-            <CommonRefreshFooter
-              refreshState={refreshState}
-              refresh={this.onHeaderRefresh}
-              retry={this.retry}
-            />
-          ),
-          showsVerticalScrollIndicator: false,
-          refreshControl: (
-            <RefreshControl
-              refreshing={refreshState === RefreshState.HeaderRefreshing}
-              onRefresh={this.onHeaderRefresh}
-            />
-          ),
-        }}
-      />
-    );
-  }
+  return (
+    <MasonryList
+      images={images}
+      onPressImage={onPressImage}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.1}
+      imageContainerStyle={styles.imageContainerStyle}
+      renderIndividualHeader={renderIndividualHeader}
+      renderIndividualFooter={renderIndividualFooter}
+      spacing={2}
+      refreshing={true}
+      backgroundColor={'#F5F5F5'}
+      listContainerStyle={styles.listContainerStyle}
+      customImageComponent={FastImage}
+      masonryFlatListColProps={{
+        ListFooterComponent: (
+          <CommonRefreshFooter
+            refreshState={refreshState}
+            refresh={onHeaderRefresh}
+            retry={retry}
+          />
+        ),
+        showsVerticalScrollIndicator: false,
+        refreshControl: (
+          <RefreshControl
+            refreshing={refreshState === RefreshState.HeaderRefreshing}
+            onRefresh={onHeaderRefresh}
+          />
+        ),
+      }}
+    />
+  );
 }
 const styles = StyleSheet.create({
   listContainerStyle: {
@@ -241,4 +239,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(RecommendPage);
+export default RecommendPage;

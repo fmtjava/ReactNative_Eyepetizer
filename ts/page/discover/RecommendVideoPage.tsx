@@ -10,33 +10,31 @@ interface IProps {
   route: RouteProp<ModalStackParamList, 'RecommendVideo'>;
 }
 
-class RecommendVideoPage extends React.Component<IProps> {
-  onPress = () => {
+function RecommendVideoPage(props: IProps) {
+  const onPress = () => {
     goBack();
   };
 
-  render() {
-    const {route} = this.props;
-    return (
-      <View style={styles.container}>
-        <Video
-          url={route.params.masonry.playUrl}
-          logo={undefined}
-          hideFullScreenControl={false}
-          autoPlay={true}
-          rotateToFullScreen
-          playInBackground={false}
-          playWhenInactive={true}
-          scrollBounce={true}
-          lockPortraitOnFsExit={true}
-          lockRatio={16 / 9}
-        />
-        <TouchableOpacity style={styles.backContainer} onPress={this.onPress}>
-          <IconAiArrowDown size={12} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  const {route} = props;
+  return (
+    <View style={styles.container}>
+      <Video
+        url={route.params.masonry.playUrl}
+        logo={undefined}
+        hideFullScreenControl={false}
+        autoPlay={true}
+        rotateToFullScreen
+        playInBackground={false}
+        playWhenInactive={true}
+        scrollBounce={true}
+        lockPortraitOnFsExit={true}
+        lockRatio={16 / 9}
+      />
+      <TouchableOpacity style={styles.backContainer} onPress={onPress}>
+        <IconAiArrowDown size={12} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

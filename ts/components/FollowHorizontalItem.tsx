@@ -8,29 +8,24 @@ interface IProps {
   item: Item;
 }
 
-class FollowHorizontalItem extends React.Component<IProps> {
-  render() {
-    const {item} = this.props;
-    return (
-      <View style={styles.container}>
-        <View>
-          <FastImage
-            style={styles.image}
-            source={{uri: item.data.cover.feed}}
-          />
-          <View style={styles.category}>
-            <Text style={styles.categoryText}>{item.data.category}</Text>
-          </View>
+function FollowHorizontalItem(props: IProps) {
+  const {item} = props;
+  return (
+    <View style={styles.container}>
+      <View>
+        <FastImage style={styles.image} source={{uri: item.data.cover.feed}} />
+        <View style={styles.category}>
+          <Text style={styles.categoryText}>{item.data.category}</Text>
         </View>
-        <Text numberOfLines={1} style={styles.title}>
-          {item.data.title}
-        </Text>
-        <Text style={styles.releaseTime}>
-          {formatDateMsByYMDHM(item.data.releaseTime)}
-        </Text>
       </View>
-    );
-  }
+      <Text numberOfLines={1} style={styles.title}>
+        {item.data.title}
+      </Text>
+      <Text style={styles.releaseTime}>
+        {formatDateMsByYMDHM(item.data.releaseTime)}
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

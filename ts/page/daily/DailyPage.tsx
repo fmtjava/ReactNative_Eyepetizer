@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, ListRenderItemInfo} from 'react-native';
 import RefreshListView from 'react-native-refresh-list-view';
 import ImageTextItem from '@/components/ImageTextItem';
@@ -6,7 +6,7 @@ import {RootState} from '@/model/dva/Models';
 import {Item} from '@/model/Daily';
 import BannerCarousel from '@/components/ BannerCarousel';
 import TitleItem from '@/components/TitleItem';
-import {connect, ConnectedProps} from 'react-redux';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 
 const TEXT_HEADER_TYPE = 'textHeader';
 const REFRESH_TYPE = 'daily/onRefresh';
@@ -21,28 +21,29 @@ const mapStateToProps = ({daily}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function DailyPage() {
+  const dispatch = useDispatch();
+  const {bannerList, dataList, refreshState, nextPageUrl} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
-type ModelState = ConnectedProps<typeof connector>;
+  useEffect(() => {
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
 
-class DailyPage extends React.Component<ModelState> {
-  componentDidMount() {
-    this.onHeaderRefresh();
-  }
-
-  onHeaderRefresh = () => {
-    const {dispatch} = this.props;
+  const onHeaderRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
 
-  onFooterRefresh = () => {
-    const {nextPageUrl} = this.props;
+  const onFooterRefresh = () => {
     if (nextPageUrl == null) {
       return;
     }
-    const {dispatch} = this.props;
     dispatch({
       type: LOAD_MORE_TYPE,
       payload: {
@@ -51,11 +52,11 @@ class DailyPage extends React.Component<ModelState> {
     });
   };
 
-  renderHeader = () => {
-    const {bannerList} = this.props;
+  const renderHeader = () => {
     return <BannerCarousel bannerList={bannerList} />;
   };
-  renderItem = ({item}: ListRenderItemInfo<Item>) => {
+
+  const renderItem = ({item}: ListRenderItemInfo<Item>) => {
     return item.type === TEXT_HEADER_TYPE ? (
       <TitleItem item={item} />
     ) : (
@@ -63,27 +64,24 @@ class DailyPage extends React.Component<ModelState> {
     );
   };
 
-  keyExtractor = (item: Item) => {
+  const keyExtractor = (item: Item) => {
     return item.data.title ? item.data.title : item.data.text;
   };
 
-  render() {
-    const {dataList, refreshState} = this.props;
-    return (
-      <View style={styles.container}>
-        <RefreshListView
-          data={dataList}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
-          ListHeaderComponent={this.renderHeader}
-          refreshState={refreshState}
-          onHeaderRefresh={this.onHeaderRefresh}
-          onFooterRefresh={this.onFooterRefresh}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    );
-  }
+  return (
+    <View style={styles.container}>
+      <RefreshListView
+        data={dataList}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListHeaderComponent={renderHeader}
+        refreshState={refreshState}
+        onHeaderRefresh={onHeaderRefresh}
+        onFooterRefresh={onFooterRefresh}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -92,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(DailyPage);
+export default DailyPage;

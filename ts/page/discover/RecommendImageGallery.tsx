@@ -20,26 +20,24 @@ interface IProps {
   route: RouteProp<ModalStackParamList, 'Gallery'>;
 }
 
-class RecommendImageGallery extends React.Component<IProps> {
-  onPress = () => {
+function RecommendImageGallery(props: IProps) {
+  const onPress = () => {
     goBack();
   };
 
-  render() {
-    const {route} = this.props;
-    return (
-      <View style={styles.container}>
-        <ImageViewer
-          imageUrls={route.params.images}
-          renderImage={(props) => <FastImage {...props} />}
-          loadingRender={() => <ActivityIndicator size="large" color="red" />}
-        />
-        <TouchableOpacity style={styles.backContainer} onPress={this.onPress}>
-          <IconAiArrowDown size={12} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  const {route} = props;
+  return (
+    <View style={styles.container}>
+      <ImageViewer
+        imageUrls={route.params.images}
+        renderImage={(props) => <FastImage {...props} />}
+        loadingRender={() => <ActivityIndicator size="large" color="red" />}
+      />
+      <TouchableOpacity style={styles.backContainer} onPress={onPress}>
+        <IconAiArrowDown size={12} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import DailyPage from '@/page/daily/DailyPage';
@@ -38,28 +38,25 @@ interface IProps {
 //创建底部导航器
 const Tab = createBottomTabNavigator<BottomParamList>();
 
-class BottomTabs extends React.Component<IProps> {
-  componentDidMount() {
-    this.setOptionTitle();
-  }
+//hook方式
+//注意点：1.不能使用this 2.
+function BottomTabs(props: IProps) {
+  //组件渲染完后都会调用useEffect方法
+  useEffect(() => {
+    setOptionTitle();
+  });
 
-  componentDidUpdate() {
-    this.setOptionTitle();
-  }
-
-  onPress = () => {
-    const {navigation} = this.props;
+  const onPress = () => {
+    const {navigation} = props;
     navigation.navigate('SearchPage');
   };
 
-  headerRight = () => {
-    const {route} = this.props;
+  const headerRight = () => {
+    const {route} = props;
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Daily';
     if (routeName === 'Daily') {
       return (
-        <TouchableWithoutFeedback
-          style={styles.headerRight}
-          onPress={this.onPress}>
+        <TouchableWithoutFeedback style={styles.headerRight} onPress={onPress}>
           <IconSearch />
         </TouchableWithoutFeedback>
       );
@@ -68,8 +65,8 @@ class BottomTabs extends React.Component<IProps> {
     }
   };
 
-  setOptionTitle = () => {
-    const {navigation, route} = this.props;
+  const setOptionTitle = () => {
+    const {navigation, route} = props;
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Daily';
     if (routeName === 'Mine') {
       navigation.setOptions({
@@ -91,81 +88,79 @@ class BottomTabs extends React.Component<IProps> {
       navigation.setOptions({
         headerShown: true,
         headerTitle: title,
-        headerRight: this.headerRight,
+        headerRight: headerRight,
       });
     }
   };
 
-  render() {
-    return (
-      <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: '#000000',
-          inactiveTintColor: '#9a9a9a',
-        }}>
-        <Tab.Screen
-          name="Daily"
-          component={DailyPage}
-          options={{
-            tabBarLabel: '日报',
-            tabBarIcon: ({focused}) => {
-              return (
-                <Image
-                  style={styles.icon}
-                  source={focused ? ic_home_selected : ic_home_normal}
-                />
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Discover"
-          component={DiscoverTabs}
-          options={{
-            tabBarLabel: '发现',
-            tabBarIcon: ({focused}) => {
-              return (
-                <Image
-                  style={styles.icon}
-                  source={focused ? ic_discovery_selected : ic_discovery_normal}
-                />
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Hot"
-          component={HotTabs}
-          options={{
-            tabBarLabel: '热门',
-            tabBarIcon: ({focused}) => {
-              return (
-                <Image
-                  style={styles.icon}
-                  source={focused ? ic_hot_selected : ic_hot_normal}
-                />
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Mine"
-          component={MinePage}
-          options={{
-            tabBarLabel: '我的',
-            tabBarIcon: ({focused}) => {
-              return (
-                <Image
-                  style={styles.icon}
-                  source={focused ? ic_mine_selected : ic_mine_normal}
-                />
-              );
-            },
-          }}
-        />
-      </Tab.Navigator>
-    );
-  }
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: '#000000',
+        inactiveTintColor: '#9a9a9a',
+      }}>
+      <Tab.Screen
+        name="Daily"
+        component={DailyPage}
+        options={{
+          tabBarLabel: '日报',
+          tabBarIcon: ({focused}) => {
+            return (
+              <Image
+                style={styles.icon}
+                source={focused ? ic_home_selected : ic_home_normal}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Discover"
+        component={DiscoverTabs}
+        options={{
+          tabBarLabel: '发现',
+          tabBarIcon: ({focused}) => {
+            return (
+              <Image
+                style={styles.icon}
+                source={focused ? ic_discovery_selected : ic_discovery_normal}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Hot"
+        component={HotTabs}
+        options={{
+          tabBarLabel: '热门',
+          tabBarIcon: ({focused}) => {
+            return (
+              <Image
+                style={styles.icon}
+                source={focused ? ic_hot_selected : ic_hot_normal}
+              />
+            );
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Mine"
+        component={MinePage}
+        options={{
+          tabBarLabel: '我的',
+          tabBarIcon: ({focused}) => {
+            return (
+              <Image
+                style={styles.icon}
+                source={focused ? ic_mine_selected : ic_mine_normal}
+              />
+            );
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({

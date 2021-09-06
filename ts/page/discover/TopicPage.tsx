@@ -1,11 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import RefreshListView from 'react-native-refresh-list-view';
 import {View, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {connect, ConnectedProps} from 'react-redux';
-import {FeedHeight, FeedWidth} from '@/utils/Utils';
+import {shallowEqual, useDispatch, useSelector} from 'react-redux';
+import {FeedHeight, FeedWidth, navigate} from '@/utils/Utils';
 import {RootState} from '@/model/dva/Models';
 import {ITopicList} from '@/model/TopicList';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const REFRESH_TYPE = 'topicList/onRefresh';
 const LOAD_MORE_TYPE = 'topicList/onLoadMore';
@@ -18,22 +19,25 @@ const mapStateToProps = ({topicList}: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+function TopicPage() {
+  const dispatch = useDispatch();
+  const {dataList, refreshState, nextPageUrl} = useSelector(
+    mapStateToProps,
+    shallowEqual,
+  );
 
-type ModelState = ConnectedProps<typeof connector>;
+  useEffect(() => {
+    dispatch({
+      type: REFRESH_TYPE,
+    });
+  }, [dispatch]);
 
-class TopicPage extends React.Component<ModelState> {
-  componentDidMount() {
-    this.onHeaderRefresh();
-  }
-  onHeaderRefresh = () => {
-    const {dispatch} = this.props;
+  const onHeaderRefresh = () => {
     dispatch({
       type: REFRESH_TYPE,
     });
   };
-  onFooterRefresh = () => {
-    const {dispatch, nextPageUrl} = this.props;
+  const onFooterRefresh = () => {
     dispatch({
       type: LOAD_MORE_TYPE,
       payload: {
@@ -41,33 +45,34 @@ class TopicPage extends React.Component<ModelState> {
       },
     });
   };
-  keyExtractor = (item: ITopicList) => {
+  const keyExtractor = (item: ITopicList) => {
     return item.data.image;
   };
 
-  renderItem = ({item}: {item: ITopicList}) => {
+  const onPress = (item: ITopicList) => {
+    navigate('TopicDetail', {id: item.data.id});
+  };
+
+  const renderItem = ({item}: {item: ITopicList}) => {
     return (
-      <View>
+      <TouchableWithoutFeedback onPress={() => onPress(item)}>
         <FastImage source={{uri: item.data.image}} style={styles.image} />
         <View style={styles.line} />
-      </View>
+      </TouchableWithoutFeedback>
     );
   };
 
-  render() {
-    const {dataList, refreshState} = this.props;
-    return (
-      <RefreshListView
-        data={dataList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-        refreshState={refreshState}
-        onHeaderRefresh={this.onHeaderRefresh}
-        onFooterRefresh={this.onFooterRefresh}
-        showsVerticalScrollIndicator={false}
-      />
-    );
-  }
+  return (
+    <RefreshListView
+      data={dataList}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      refreshState={refreshState}
+      onHeaderRefresh={onHeaderRefresh}
+      onFooterRefresh={onFooterRefresh}
+      showsVerticalScrollIndicator={false}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
@@ -87,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connector(TopicPage);
+export default TopicPage;
