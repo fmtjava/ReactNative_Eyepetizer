@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {EVENT_TYPE} from '@/event/Index';
+import EmptyView from '@/components/common/EmptyView';
 
 class WatchHistoryPage extends Component {
   subscription?: EmitterSubscription;
@@ -57,6 +58,32 @@ class WatchHistoryPage extends Component {
     );
   };
 
+  contentView = () => {
+    if (this.state.dataList.length === 0) {
+      return <EmptyView />;
+    } else {
+      return (
+        <SwipeableFlatList
+          style={styles.container}
+          data={this.state.dataList}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+          showsVerticalScrollIndicator={false}
+          renderRightActions={({item}) => (
+            <SwipeableQuickActions>
+              <SwipeableQuickActionButton
+                style={styles.deleteContainer}
+                onPress={() => this.removeItem(item)}
+                text="Delete"
+                textStyle={styles.deleteText}
+              />
+            </SwipeableQuickActions>
+          )}
+        />
+      );
+    }
+  };
+
   keyExtractor = (item: Item) => {
     return item.data.title ? item.data.title : item.data.text;
   };
@@ -69,25 +96,7 @@ class WatchHistoryPage extends Component {
   };
 
   render() {
-    return (
-      <SwipeableFlatList
-        style={styles.container}
-        data={this.state.dataList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-        showsVerticalScrollIndicator={false}
-        renderRightActions={({item}) => (
-          <SwipeableQuickActions>
-            <SwipeableQuickActionButton
-              style={styles.deleteContainer}
-              onPress={() => this.removeItem(item)}
-              text="Delete"
-              textStyle={styles.deleteText}
-            />
-          </SwipeableQuickActions>
-        )}
-      />
-    );
+    return this.contentView();
   }
 
   componentWillUnmount() {
@@ -111,5 +120,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textAlignVertical: 'center',
+  },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    marginTop: 5,
   },
 });

@@ -29,9 +29,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import IconBack1 from '@/assets/iconfont/IconBack1';
 import IconSearch from '@/assets/iconfont/IconSearch';
 import Toast from 'react-native-root-toast';
-import IconWantempty from '@/assets/iconfont/IconWantempty';
 import Spinner from 'react-native-loading-spinner-overlay';
 import IconIconVoice from '@/assets/iconfont/IconIconVoice';
+import EmptyView from '@/components/common/EmptyView';
 
 const CLEAR_TYPE = 'search/setState';
 const KEYWORD_TYPE = 'search/getKeyWordList';
@@ -154,12 +154,7 @@ function SearchPage() {
         </View>
       );
     } else {
-      return (
-        <View style={styles.empty}>
-          <IconWantempty size={60} />
-          <Text style={styles.emptyText}>暂时木有数据</Text>
-        </View>
-      );
+      return <EmptyView />;
     }
   };
 
@@ -374,14 +369,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
     color: '#fff',
-  },
-  empty: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    marginTop: 5,
   },
 });
 
