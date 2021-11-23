@@ -1,4 +1,4 @@
 API_URL=http:/$()/baobab.kaiyanapp.com/api/
 APP_NAME=Eyepetizer
-VERSIONCODE=3
-VERSIONNAME=1.0.2
+VERSIONCODE=4
+VERSIONNAME=1.0.3

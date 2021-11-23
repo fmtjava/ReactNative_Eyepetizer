@@ -969,6 +969,13 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
+"@react-native-async-storage/async-storage@^1.15.11":
+  version "1.15.11"
+  resolved "https://registry.npmmirror.com/@react-native-async-storage/async-storage/download/@react-native-async-storage/async-storage-1.15.11.tgz#da625b906529076414c32fd337d813b565149858"
+  integrity sha1-2mJbkGUpB2QUwy/TN9gTtWUUmFg=
+  dependencies:
+    merge-options "^3.0.4"
+
 "@react-native-community/cli-debugger-ui@^4.13.1":
   version "4.13.1"
   resolved "https://registry.npm.taobao.org/@react-native-community/cli-debugger-ui/download/@react-native-community/cli-debugger-ui-4.13.1.tgz?cache=0&sync_timestamp=1605787620850&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40react-native-community%2Fcli-debugger-ui%2Fdownload%2F%40react-native-community%2Fcli-debugger-ui-4.13.1.tgz"
@@ -4000,6 +4007,11 @@ is-number@^7.0.0:
   resolved "https://registry.npm.taobao.org/is-number/download/is-number-7.0.0.tgz"
   integrity sha1-dTU0W4lnNNX4DE0GxQlVUnoU8Ss=
 
+is-plain-obj@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/is-plain-obj/download/is-plain-obj-2.1.0.tgz#45e42e37fccf1f40da8e5f76ee21515840c09287"
+  integrity sha1-ReQuN/zPH0Dajl927iFRWEDAkoc=
+
 is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npm.taobao.org/is-plain-object/download/is-plain-object-2.0.4.tgz"
@@ -4977,6 +4989,13 @@ mdn-data@2.0.14:
   version "2.0.14"
   resolved "https://registry.npm.taobao.org/mdn-data/download/mdn-data-2.0.14.tgz?cache=0&sync_timestamp=1605141739208&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmdn-data%2Fdownload%2Fmdn-data-2.0.14.tgz"
   integrity sha1-cRP8QoGRfWPOKbQ0RvcB5owlulA=
+
+merge-options@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.nlark.com/merge-options/download/merge-options-3.0.4.tgz#84709c2aa2a4b24c1981f66c179fe5565cc6dbb7"
+  integrity sha1-hHCcKqKkskwZgfZsF5/lVlzG27c=
+  dependencies:
+    is-plain-obj "^2.1.0"
 
 merge-stream@^1.0.1:
   version "1.0.1"
@@ -6222,6 +6241,11 @@ react-native-svg@^12.1.0:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
+
+react-native-swipe-list@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmmirror.com/react-native-swipe-list/download/react-native-swipe-list-0.0.2.tgz#fc0c9c5317902d669b9bf768fc4fb1edb1557f3f"
+  integrity sha1-/AycUxeQLWabm/do/E+x7bFVfz8=
 
 react-native-tab-view@^2.15.2:
   version "2.15.2"

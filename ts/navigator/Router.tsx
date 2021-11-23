@@ -20,11 +20,13 @@ import RecommendVideoPage from '@/page/discover/RecommendVideoPage';
 import TopicDetailPage from '@/page/discover/TopicDetailPage';
 import CategoryDetailPage from '@/page/discover/CategoryDetailPage';
 import {ICategory} from '@/model/Category';
+import WatchHistoryPage from '@/page/mine/WatchHistoryPage';
 
 //定义堆栈路由参数每一个页面的名称以及进入页面传递参数的类型
 export type RootStackParamList = {
   BottomTabs: undefined;
   SearchPage: undefined;
+  WatchHistoryPage: undefined;
   TopicDetail: {
     id: number;
   };
@@ -76,6 +78,11 @@ function RootStackScreen() {
         options={{headerShown: false}}
       />
       <Stack.Screen name="TopicDetail" component={TopicDetailPage} />
+      <Stack.Screen
+        name="WatchHistoryPage"
+        component={WatchHistoryPage}
+        options={{title: '观看记录'}}
+      />
       <Stack.Screen
         name="NewsDetail"
         component={NewsDetailPage}

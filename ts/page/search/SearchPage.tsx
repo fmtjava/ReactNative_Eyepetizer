@@ -67,12 +67,14 @@ function SearchPage() {
   );
 
   useEffect(() => {
+    //对应componentDidMount
     dispatch({
       type: KEYWORD_TYPE,
     });
   }, [dispatch]);
 
   useEffect(() => {
+    //对应componentWillUnmount
     return () => {
       dispatch({
         type: CLEAR_TYPE,

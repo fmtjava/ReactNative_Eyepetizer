@@ -1,9 +1,10 @@
 import React from 'react';
-import {Text, Image, StyleSheet, View} from 'react-native';
+import {Text, Image, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ic_img_avatar from '@/assets/ic_img_avatar.png';
 import IconLove from '@/assets/iconfont/IconLove';
 import IconComment from '@/assets/iconfont/IconComment';
+import {navigate} from '@/utils/Utils';
 
 class MinePage extends React.Component {
   render() {
@@ -27,14 +28,24 @@ class MinePage extends React.Component {
           </View>
         </View>
         <View style={styles.horizontalLine} />
-        <Text style={styles.settings}>我的消息</Text>
-        <Text style={styles.settings}>我的记录</Text>
-        <Text style={styles.settings}>我的缓存</Text>
-        <Text style={styles.settings}>观看记录</Text>
-        <Text style={styles.settings}>意见反馈</Text>
+        {this.settingView('我的消息')}
+        {this.settingView('我的记录')}
+        {this.settingView('我的缓存')}
+        {this.settingView('观看记录', () => {
+          navigate('WatchHistoryPage');
+        })}
+        {this.settingView('意见反馈')}
       </SafeAreaView>
     );
   }
+
+  settingView = (text: string, onPress?: () => void | undefined) => {
+    return (
+      <TouchableOpacity onPress={onPress}>
+        <Text style={styles.settings}>{text}</Text>
+      </TouchableOpacity>
+    );
+  };
 }
 
 const styles = StyleSheet.create({

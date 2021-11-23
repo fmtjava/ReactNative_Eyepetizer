@@ -13,6 +13,8 @@ module.exports = {
           '@/navigator': './ts/navigator',
           '@/page': './ts/page',
           '@/utils': './ts/utils',
+          '@/dao': './ts/dao',
+          '@/event': './ts/event',
         },
       },
     ],

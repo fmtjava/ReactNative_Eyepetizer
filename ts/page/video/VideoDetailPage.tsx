@@ -21,11 +21,14 @@ import {
   RefreshControl,
   ListRenderItemInfo,
   ImageBackground,
+  TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native';
 import {Item} from '@/model/Daily';
 import VideoRelateItem from '@/components/VideoRelateItem';
 import Video from '@/components/video';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import WatchHistoryDao from '@/dao/WatchHistoryDao';
+import {EVENT_TYPE} from '@/event/Index';
 
 const VIDEO_SMALL_CARD_TYPE = 'videoSmallCard';
 const REFRESH_TYPE = 'video/getRelateVideoList';
@@ -47,6 +50,12 @@ function VideoDetailPage(props: IProps) {
     shallowEqual,
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    WatchHistoryDao.updateWatchHistory(props.route.params.item, true, () => {
+      DeviceEventEmitter.emit(EVENT_TYPE.WATCH_VIDEO_TYPE, item);
+    });
+  });
 
   useEffect(() => {
     dispatch({
@@ -74,9 +83,9 @@ function VideoDetailPage(props: IProps) {
     return item.type !== VIDEO_SMALL_CARD_TYPE ? (
       <Text style={styles.relateTitle}>{item.data.text}</Text>
     ) : (
-      <TouchableWithoutFeedback onPress={() => onPress(item)}>
+      <TouchableOpacity onPress={() => onPress(item)}>
         <VideoRelateItem item={item} />
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   };
 

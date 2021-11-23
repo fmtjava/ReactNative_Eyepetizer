@@ -6,10 +6,11 @@ import FastImage from 'react-native-fast-image';
 
 interface IProps {
   item: Item;
+  fromWatch?: boolean | undefined;
 }
 
 function VideoRelateItem(props: IProps) {
-  const {item} = props;
+  const {item, fromWatch = false} = props;
   return (
     <View style={styles.container}>
       <View style={styles.feedContainer}>
@@ -21,8 +22,10 @@ function VideoRelateItem(props: IProps) {
         </View>
       </View>
       <View style={styles.videoInfo}>
-        <Text style={styles.title}>{item.data.title}</Text>
-        <Text style={styles.category}>
+        <Text style={fromWatch ? styles.watchTitle : styles.title}>
+          {item.data.title}
+        </Text>
+        <Text style={fromWatch ? styles.watchCategory : styles.category}>
           #{item.data.category} /{' '}
           {item.data.author == null ? '' : item.data.author.name}
         </Text>
@@ -30,6 +33,8 @@ function VideoRelateItem(props: IProps) {
     </View>
   );
 }
+
+export default VideoRelateItem;
 
 const styles = StyleSheet.create({
   container: {
@@ -68,11 +73,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  watchTitle: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: 'bold',
+  },
   category: {
     marginTop: 10,
     fontSize: 12,
     color: '#fff',
   },
+  watchCategory: {
+    marginTop: 10,
+    fontSize: 12,
+    color: '#999',
+  },
 });
-
-export default VideoRelateItem;

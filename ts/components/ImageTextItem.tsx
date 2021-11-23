@@ -1,16 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import IconShare1 from '@/assets/iconfont/IconShare1';
 import {Item} from '@/model/Daily';
 import {FeedWidth, formatDateMsByMS, navigate, share} from '@/utils/Utils';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 interface IProps {
   item: Item;
 }
 
-function ImageTextItem(props: IProps) {
+export default (props: IProps) => {
   const onPress = (item: Item) => {
     navigate('VideoDetail', {item: item});
   };
@@ -18,7 +17,7 @@ function ImageTextItem(props: IProps) {
   const {item} = props;
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={() => onPress(item)}>
+      <TouchableOpacity onPress={() => onPress(item)}>
         <FastImage
           style={styles.feed}
           source={{
@@ -33,7 +32,7 @@ function ImageTextItem(props: IProps) {
             {formatDateMsByMS(item.data.duration * 1000)}
           </Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
       <View style={styles.bottom}>
         <FastImage
           style={styles.author}
@@ -59,7 +58,7 @@ function ImageTextItem(props: IProps) {
       <View style={styles.line} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -131,5 +130,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#0000001F',
   },
 });
-
-export default ImageTextItem;
