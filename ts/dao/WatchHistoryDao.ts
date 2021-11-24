@@ -19,25 +19,17 @@ export default class WatchHistoryDao {
           if (watchList.length === 0) {
             watchList.push(item);
           } else {
-            let isContain = false;
-            for (const watchItem of watchList) {
-              if (item.data.id === watchItem.data.id) {
-                isContain = true;
-                break;
-              }
-            }
-            if (!isContain) {
+            const index = watchList.findIndex(
+              (watchItem: Item) => item.data.id === watchItem.data.id,
+            );
+            if (index === -1) {
               watchList.push(item);
             }
           }
         } else {
-          let index = 0;
-          for (const watchItem of watchList) {
-            if (item.data.id === watchItem.data.id) {
-              index = watchList.indexOf(watchItem);
-              break;
-            }
-          }
+          const index = watchList.findIndex(
+            (watchItem: Item) => item.data.id === watchItem.data.id,
+          );
           watchList.splice(index, 1);
         }
         AsyncStorage.setItem(
