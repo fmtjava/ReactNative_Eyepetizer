@@ -1,7 +1,8 @@
 # ReactNative_Eyepetizer
 一款基于ReactNative + TypeScript实现的精美仿开眼视频跨平台App,适合新手入门，快速掌握TypeScript基本语法以及快速上手ReactNative开发。<br /><br />
 Kotlin版： [Kotlin_Eyepetizer](https://github.com/fmtjava/Kotlin_Eyepetizer)<br /><br />
-Flutter版：[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)
+Flutter版：[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)<br /><br />
+小程序版：[wx_eyepetizer](https://github.com/fmtjava/wx_eyepetizer)<br /><br />
 
 # 前言
  前段时间有Github的小伙伴问[Flutter_Eyepetizer](https://github.com/fmtjava/Flutter_Eyepetizer)能不能提供一个ReactNative版本，因为当时的工作暂时没有涉及这块内容，所以暂时就搁置了。最近公司的一个项目用到了个ReactNative混合开发，自己也参与了一部分开发，便通过这个项目把学到的相关技能分享出来，因为目前对ReactNative处于初步入门阶段，希望Github的小伙伴多多Issues，留下你们的宝贵意见。当前如果觉得项目能够帮助到你们，也希望给一个 `Star` 或 `Fork` ^_^ ，谢谢**
